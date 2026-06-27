@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprovante de Encaixe — Grupo Ocupacional</title>
+<style>
+  :root {
+    --navy: #1A2332;
+    --lime: #B8D432;
+    --lime-dark: #9ab22a;
+    --teal: #1A5F5E;
+    --white: #ffffff;
+    --gray-50: #F8F9FA;
+    --gray-100: #F0F2F5;
+    --gray-200: #E2E6EA;
+    --gray-400: #9AA3AF;
+    --gray-600: #5A6270;
+    --gray-800: #2D3340;
+    --success: #2E7D32;
+    --success-bg: #E8F5E9;
+    --error: #C62828;
+    --error-bg: #FFEBEE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    padding: 0;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    padding: 18px 32px;
+    gap: 16px;
+  }
+  .logo-mark {
+    width: 42px; height: 42px;
+    background: var(--lime);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900; color: var(--navy);
+    flex-shrink: 0;
+  }
+  .header-title h1 {
+    font-size: 18px; font-weight: 700; color: var(--white);
+    letter-spacing: 0.3px;
+  }
+  .header-title p {
+    font-size: 11px; color: var(--lime); margin-top: 2px; letter-spacing: 0.5px;
+  }
+  .header-bar {
+    height: 4px;
+    background: var(--lime);
+  }
+
+  /* ── Nav tabs ── */
+  .tabs {
+    background: var(--navy);
+    display: flex;
+    padding: 0 32px;
+    gap: 4px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-family: Arial, sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .tab-btn:hover { color: var(--lime); }
+  .tab-btn.active {
+    color: var(--lime);
+    border-bottom-color: var(--lime);
+  }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--lime); color: var(--navy);
+    border-radius: 10px; font-size: 10px; font-weight: 700;
+    padding: 1px 6px; margin-left: 6px; min-width: 18px;
+  }
+
+  /* ── Layout ── */
+  .page { display: none; padding: 32px; max-width: 900px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-header {
+    background: var(--navy);
+    padding: 12px 20px;
+    font-size: 11px; font-weight: 700;
+    color: var(--lime); letter-spacing: 1px; text-transform: uppercase;
+  }
+  .card-body { padding: 24px; }
+
+  /* ── Form ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label {
+    font-size: 11px; font-weight: 700; color: var(--gray-600);
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  label .req { color: var(--lime-dark); }
+  input, select, textarea {
+    font-family: Arial, sans-serif;
+    font-size: 14px; color: var(--gray-800);
+    padding: 10px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 6px;
+    background: var(--gray-50);
+    transition: border-color 0.15s, background 0.15s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--lime-dark);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(184,212,50,0.15);
+  }
+  input.error, select.error { border-color: var(--error); background: var(--error-bg); }
+  textarea { resize: vertical; min-height: 72px; }
+  select { appearance: auto; }
+
+  /* ── Botões ── */
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+    border: none; border-radius: 7px;
+    padding: 13px 28px;
+    font-family: Arial, sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #243149; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-lime {
+    background: var(--lime);
+    color: var(--navy);
+    border: none; border-radius: 7px;
+    padding: 13px 28px;
+    font-family: Arial, sans-serif; font-size: 14px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-lime:hover { background: var(--lime-dark); }
+  .btn-outline {
+    background: transparent;
+    color: var(--gray-600);
+    border: 1.5px solid var(--gray-200); border-radius: 7px;
+    padding: 10px 20px;
+    font-family: Arial, sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-danger-sm {
+    background: transparent; border: none;
+    color: var(--error); cursor: pointer;
+    font-size: 12px; padding: 4px 8px; border-radius: 4px;
+    font-family: Arial, sans-serif;
+  }
+  .btn-danger-sm:hover { background: var(--error-bg); }
+  .form-actions {
+    display: flex; gap: 12px; margin-top: 8px; justify-content: flex-end;
+  }
+
+  /* ── Comprovante ── */
+  .comp-wrapper {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .comp-header {
+    background: var(--navy);
+    padding: 28px 32px 20px;
+    color: var(--white);
+  }
+  .comp-header h2 {
+    font-size: 22px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .comp-header p {
+    font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px;
+  }
+  .comp-stripe { height: 5px; background: var(--lime); }
+  .comp-protocol {
+    background: var(--gray-50);
+    padding: 10px 32px;
+    font-size: 12px; color: var(--gray-600);
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .comp-protocol strong { color: var(--navy); }
+  .comp-body { padding: 28px 32px; }
+  .comp-section-title {
+    font-size: 10px; font-weight: 700; color: var(--lime-dark);
+    letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--lime);
+  }
+  .comp-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 32px;
+    margin-bottom: 24px;
+  }
+  .comp-field { display: flex; flex-direction: column; gap: 3px; }
+  .comp-field .cf-label {
+    font-size: 10px; font-weight: 700; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .comp-field .cf-value {
+    font-size: 15px; font-weight: 600; color: var(--navy);
+    padding: 8px 12px;
+    background: var(--gray-50);
+    border-left: 3px solid var(--lime);
+    border-radius: 0 5px 5px 0;
+  }
+  .comp-field.full-field { grid-column: 1 / -1; }
+  .comp-confirm {
+    background: var(--success-bg);
+    border: 1.5px solid #81C784;
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px; font-weight: 600; color: var(--success);
+    margin-bottom: 24px;
+  }
+  .comp-confirm .icon { font-size: 20px; }
+  .comp-sign {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px; margin-top: 8px;
+  }
+  .sign-box {
+    border-top: 2px solid var(--navy);
+    padding-top: 8px;
+    font-size: 11px; color: var(--gray-600);
+    text-align: center;
+  }
+  .comp-footer {
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-200);
+    padding: 12px 32px;
+    font-size: 11px; color: var(--gray-400);
+    text-align: center;
+  }
+
+  /* ── Histórico ── */
+  .hist-controls {
+    display: flex; gap: 12px; align-items: center;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1; min-width: 200px;
+    padding: 9px 14px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 6px; font-size: 13px;
+    font-family: Arial, sans-serif;
+    background: var(--white); outline: none;
+  }
+  .search-box:focus { border-color: var(--lime-dark); }
+  .filter-sel {
+    padding: 9px 14px; border: 1.5px solid var(--gray-200);
+    border-radius: 6px; font-size: 13px; font-family: Arial, sans-serif;
+    background: var(--white); outline: none; cursor: pointer;
+  }
+  .hist-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px; padding: 14px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .stat-card .s-label { font-size: 10px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .s-val { font-size: 24px; font-weight: 700; color: var(--navy); margin-top: 4px; }
+  .stat-card .s-sub { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--navy); }
+  thead th {
+    padding: 11px 14px; text-align: left;
+    color: var(--white); font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid var(--gray-200); transition: background 0.1s; }
+  tbody tr:nth-child(even) { background: var(--gray-50); }
+  tbody tr:hover { background: #F0F4E8; }
+  tbody td { padding: 10px 14px; color: var(--gray-800); vertical-align: middle; }
+  .badge {
+    display: inline-block; padding: 3px 9px;
+    border-radius: 12px; font-size: 11px; font-weight: 700;
+  }
+  .badge-lourdes  { background: #E3F2FD; color: #1565C0; }
+  .badge-centro   { background: #F3E5F5; color: #6A1B9A; }
+  .badge-eldorado { background: #FFF8E1; color: #E65100; }
+  .empty-state {
+    text-align: center; padding: 48px 20px;
+    color: var(--gray-400);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--navy); color: var(--white);
+    padding: 13px 20px; border-radius: 8px;
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 10px;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.25s; z-index: 999;
+    border-left: 4px solid var(--lime);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── Print ── */
+  @media print {
+    header, .tabs, .page:not(#pg-comp) { display: none !important; }
+    #pg-comp { display: block !important; padding: 0; }
+    .no-print { display: none !important; }
+    .comp-wrapper { box-shadow: none; border: none; }
+    body { background: white; }
+  }
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .comp-fields { grid-template-columns: 1fr; }
+    .hist-stats { grid-template-columns: 1fr 1fr; }
+    .page { padding: 16px; }
+    .tabs { padding: 0 12px; }
+    .tab-btn { padding: 10px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="logo-mark">GO</div>
+    <div class="header-title">
+      <h1>Comprovante de Encaixe</h1>
+      <p>GRUPO OCUPACIONAL — MEDICINA OCUPACIONAL</p>
+    </div>
+  </div>
+  <div class="header-bar"></div>
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="showTab('cadastro')">📋 Cadastro</button>
+    <button class="tab-btn" onclick="showTab('comp')" id="tab-comp">🖨️ Comprovante</button>
+    <button class="tab-btn" onclick="showTab('hist')" id="tab-hist">
+      📊 Histórico <span class="tab-badge" id="badge-count">0</span>
+    </button>
+  </nav>
+</header>
+
+<!-- ── CADASTRO ── -->
+<div class="page active" id="pg-cadastro">
+  <div class="card">
+    <div class="card-header">Dados do Agendamento</div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Nome do Colaborador <span class="req">*</span></label>
+          <input type="text" id="f-nome" placeholder="Nome completo do colaborador" autocomplete="off">
+        </div>
+        <div class="form-group full">
+          <label>Empresa Solicitante <span class="req">*</span></label>
+          <input type="text" id="f-empresa" placeholder="Razão social ou nome da empresa" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Unidade de Atendimento <span class="req">*</span></label>
+          <select id="f-unidade">
+            <option value="">Selecione a unidade…</option>
+            <option>Unidade Lourdes</option>
+            <option>Unidade Centro</option>
+            <option>Unidade Eldorado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Turno <span class="req">*</span></label>
+          <select id="f-turno">
+            <option value="">Selecione o turno…</option>
+            <option value="Manhã">Manhã</option>
+            <option value="Tarde">Tarde</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Data do Agendamento <span class="req">*</span></label>
+          <input type="date" id="f-data">
+        </div>
+        <div class="form-group">
+          <label>Horário Agendado <span class="req">*</span></label>
+          <input type="time" id="f-hora">
+        </div>
+        <div class="form-group">
+          <label>Observações</label>
+          <input type="text" id="f-obs" placeholder="Observação ou procedimento (opcional)">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-outline" onclick="limparForm()">Limpar</button>
+        <button class="btn-primary" onclick="gerarComprovante()">
+          ✔ Confirmar e Gerar Comprovante
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── COMPROVANTE ── -->
+<div class="page" id="pg-comp">
+  <div class="comp-wrapper" id="comp-content">
+    <div class="comp-header">
+      <h2>COMPROVANTE DE ENCAIXE</h2>
+      <p>Grupo Ocupacional — Medicina Ocupacional</p>
+    </div>
+    <div class="comp-stripe"></div>
+    <div class="comp-protocol">
+      <span>Protocolo: <strong id="c-protocolo">—</strong></span>
+      <span>Emitido em: <strong id="c-emissao">—</strong></span>
+    </div>
+    <div class="comp-body">
+      <div class="comp-section-title">Dados do Agendamento</div>
+      <div class="comp-fields">
+        <div class="comp-field">
+          <div class="cf-label">Colaborador</div>
+          <div class="cf-value" id="c-nome">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Empresa</div>
+          <div class="cf-value" id="c-empresa">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Unidade</div>
+          <div class="cf-value" id="c-unidade">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Turno</div>
+          <div class="cf-value" id="c-turno">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Data</div>
+          <div class="cf-value" id="c-data">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Horário</div>
+          <div class="cf-value" id="c-hora">—</div>
+        </div>
+        <div class="comp-field">
+          <div class="cf-label">Observações</div>
+          <div class="cf-value" id="c-obs">—</div>
+        </div>
+      </div>
+      <div class="comp-confirm">
+        <span class="icon">✅</span>
+        <span id="c-msg">Agendamento confirmado. Apresente este comprovante na recepção.</span>
+      </div>
+      <div class="comp-sign">
+        <div class="sign-box">Assinatura do Colaborador</div>
+        <div class="sign-box">Assinatura / Carimbo da Unidade</div>
+      </div>
+    </div>
+    <div class="comp-footer">
+      Este documento é um comprovante de encaixe. Horário sujeito a confirmação da unidade.
+    </div>
+  </div>
+  <div class="form-actions no-print" style="margin-top:16px;">
+    <button class="btn-outline" onclick="showTab('cadastro')">← Novo Cadastro</button>
+    <button class="btn-lime" onclick="window.print()">🖨️ Imprimir Comprovante</button>
+  </div>
+</div>
+
+<!-- ── HISTÓRICO ── -->
+<div class="page" id="pg-hist">
+  <div class="hist-stats">
+    <div class="stat-card">
+      <div class="s-label">Total de Encaixes</div>
+      <div class="s-val" id="st-total">0</div>
+      <div class="s-sub">registros</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Unidade Lourdes</div>
+      <div class="s-val" id="st-lourdes">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Unidade Centro</div>
+      <div class="s-val" id="st-centro">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="s-label">Unidade Eldorado</div>
+      <div class="s-val" id="st-eldorado">0</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Registros de Encaixe</div>
+    <div class="card-body" style="padding-bottom:12px;">
+      <div class="hist-controls">
+        <input class="search-box" type="text" id="hist-search" placeholder="🔍 Buscar por colaborador ou empresa…" oninput="renderHistorico()">
+        <select class="filter-sel" id="hist-filter" onchange="renderHistorico()">
+          <option value="">Todas as unidades</option>
+          <option>Unidade Lourdes</option>
+          <option>Unidade Centro</option>
+          <option>Unidade Eldorado</option>
+        </select>
+        <button class="btn-outline" onclick="exportarCSV()">⬇ Exportar CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Colaborador</th>
+              <th>Empresa</th>
+              <th>Unidade</th>
+              <th>Turno</th>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Observações</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="hist-tbody"></tbody>
+        </table>
+        <div id="hist-empty" class="empty-state" style="display:none">
+          <div class="icon">📋</div>
+          <p>Nenhum encaixe registrado ainda.<br>Cadastre um agendamento para começar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Storage ──────────────────────────────────────────────────────────────────
+// ── URL DO APPS SCRIPT (substitua após implantar) ──────────────────────────
+const APPS_SCRIPT_URL = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+
+let encaixes = [];
+
+async function loadData() {
+  try {
+    const r = await window.storage.get('encaixes_data');
+    encaixes = r ? JSON.parse(r.value) : [];
+  } catch(e) { encaixes = []; }
+  updateBadge();
+  renderHistorico();
+}
+
+async function saveData() {
+  try {
+    await window.storage.set('encaixes_data', JSON.stringify(encaixes));
+  } catch(e) { console.error('Erro ao salvar:', e); }
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`pg-${tab}`).classList.add('active');
+  const idx = ['cadastro','comp','hist'].indexOf(tab);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (tab === 'hist') renderHistorico();
+}
+
+// ── Validação ─────────────────────────────────────────────────────────────────
+function validar() {
+  const ids = ['f-nome','f-empresa','f-unidade','f-turno','f-data','f-hora'];
+  let ok = true;
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add('error'); ok = false; }
+    else el.classList.remove('error');
+  });
+  return ok;
+}
+
+// ── Protocolo ─────────────────────────────────────────────────────────────────
+function gerarProtocolo(nome) {
+  const d = new Date();
+  const dt = d.toISOString().slice(0,10).replace(/-/g,'');
+  const sufx = nome.replace(/\s+/g,'').toUpperCase().slice(0,4);
+  const seq = String(encaixes.length + 1).padStart(3,'0');
+  return `ENC-${dt}-${sufx}-${seq}`;
+}
+
+function fmtData(val) {
+  if (!val) return '—';
+  const [y,m,d] = val.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// ── Gerar comprovante ─────────────────────────────────────────────────────────
+async function gerarComprovante() {
+  if (!validar()) { toast('⚠️ Preencha todos os campos obrigatórios.', true); return; }
+
+  const dados = {
+    id: Date.now(),
+    protocolo: gerarProtocolo(document.getElementById('f-nome').value),
+    nome:     document.getElementById('f-nome').value.trim(),
+    empresa:  document.getElementById('f-empresa').value.trim(),
+    unidade:  document.getElementById('f-unidade').value,
+    turno:    document.getElementById('f-turno').value,
+    data:     document.getElementById('f-data').value,
+    hora:     document.getElementById('f-hora').value,
+    obs:      document.getElementById('f-obs').value.trim() || '—',
+    emissao:  new Date().toLocaleDateString('pt-BR')
+  };
+
+  // Preencher comprovante
+  document.getElementById('c-protocolo').textContent = dados.protocolo;
+  document.getElementById('c-emissao').textContent   = dados.emissao;
+  document.getElementById('c-nome').textContent      = dados.nome;
+  document.getElementById('c-empresa').textContent   = dados.empresa;
+  document.getElementById('c-unidade').textContent   = dados.unidade;
+  document.getElementById('c-turno').textContent     = dados.turno;
+  document.getElementById('c-data').textContent      = fmtData(dados.data);
+  document.getElementById('c-hora').textContent      = dados.hora;
+  document.getElementById('c-obs').textContent       = dados.obs;
+  document.getElementById('c-msg').textContent       =
+    `Agendamento confirmado para ${dados.unidade}. Apresente este comprovante na recepção.`;
+
+  // Salvar no histórico automaticamente
+  encaixes.unshift(dados);
+  await saveData();
+  updateBadge();
+
+  // ── Enviar para Google Sheets ────────────────────────────────
+  enviarParaSheets(dados);
+
+  showTab('comp');
+  toast('✅ Comprovante gerado e registrado no histórico!');
+}
+
+// ── Limpar form ───────────────────────────────────────────────────────────────
+function limparForm() {
+  ['f-nome','f-empresa','f-unidade','f-turno','f-data','f-hora','f-obs'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.classList.remove('error');
+  });
+}
+
+// ── Renderizar Histórico ──────────────────────────────────────────────────────
+function renderHistorico() {
+  const busca  = (document.getElementById('hist-search')?.value || '').toLowerCase();
+  const filtro = document.getElementById('hist-filter')?.value || '';
+
+  const lista = encaixes.filter(e => {
+    const matchBusca  = !busca  || e.nome.toLowerCase().includes(busca) || e.empresa.toLowerCase().includes(busca);
+    const matchFiltro = !filtro || e.unidade === filtro;
+    return matchBusca && matchFiltro;
+  });
+
+  // Stats
+  document.getElementById('st-total').textContent    = encaixes.length;
+  document.getElementById('st-lourdes').textContent  = encaixes.filter(e=>e.unidade==='Unidade Lourdes').length;
+  document.getElementById('st-centro').textContent   = encaixes.filter(e=>e.unidade==='Unidade Centro').length;
+  document.getElementById('st-eldorado').textContent = encaixes.filter(e=>e.unidade==='Unidade Eldorado').length;
+
+  const tbody = document.getElementById('hist-tbody');
+  const empty = document.getElementById('hist-empty');
+
+  if (lista.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const badgeClass = u => {
+    if (u.includes('Lourdes'))  return 'badge badge-lourdes';
+    if (u.includes('Centro'))   return 'badge badge-centro';
+    if (u.includes('Eldorado')) return 'badge badge-eldorado';
+    return 'badge';
+  };
+
+  tbody.innerHTML = lista.map((e, i) => `
+    <tr>
+      <td style="color:var(--gray-400);font-size:11px">${encaixes.indexOf(e)+1}</td>
+      <td><strong>${e.nome}</strong></td>
+      <td>${e.empresa}</td>
+      <td><span class="${badgeClass(e.unidade)}">${e.unidade.replace('Unidade ','')}</span></td>
+      <td><span style="font-size:11px;background:#E8F5E9;color:#2E7D32;padding:2px 8px;border-radius:10px;font-weight:600">${e.turno||'—'}</span></td>
+      <td>${fmtData(e.data)}</td>
+      <td>${e.hora}</td>
+      <td style="color:var(--gray-600);font-size:12px">${e.obs}</td>
+      <td><button class="btn-danger-sm" onclick="excluir(${e.id})">✕</button></td>
+    </tr>
+  `).join('');
+}
+
+// ── Excluir ───────────────────────────────────────────────────────────────────
+async function excluir(id) {
+  if (!confirm('Remover este registro do histórico?')) return;
+  encaixes = encaixes.filter(e => e.id !== id);
+  await saveData();
+  updateBadge();
+  renderHistorico();
+  toast('Registro removido.');
+}
+
+// ── Badge ─────────────────────────────────────────────────────────────────────
+function updateBadge() {
+  document.getElementById('badge-count').textContent = encaixes.length;
+}
+
+// ── Exportar CSV ──────────────────────────────────────────────────────────────
+function exportarCSV() {
+  if (!encaixes.length) { toast('Nenhum dado para exportar.', true); return; }
+  const header = 'Nº;Protocolo;Colaborador;Empresa;Unidade;Turno;Data;Horário;Observações;Emissão';
+  const rows = encaixes.map((e,i) =>
+    `${i+1};${e.protocolo};${e.nome};${e.empresa};${e.unidade};${e.turno||''};${fmtData(e.data)};${e.hora};${e.obs};${e.emissao}`
+  );
+  const csv = '\uFEFF' + [header, ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Historico_Encaixes_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('📥 CSV exportado com sucesso!');
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let toastTimer;
+function toast(msg, err=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderLeftColor = err ? '#E53935' : 'var(--lime)';
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+// ── Enviar para Google Sheets ─────────────────────────────────────────────────
+async function enviarParaSheets(dados) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'COLE_AQUI_A_URL_DO_APPS_SCRIPT') {
+    console.warn('URL do Apps Script não configurada — dados salvos apenas localmente.');
+    return;
+  }
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dados)
+    });
+    // no-cors não retorna resposta legível, mas o dado chega no Sheets
+    console.log('✅ Dado enviado para Google Sheets');
+  } catch (err) {
+    console.warn('⚠️ Não foi possível enviar para Sheets:', err.message);
+    // Não bloqueia o fluxo — dado já está salvo localmente
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+loadData();
+// Data padrão = hoje
+document.getElementById('f-data').valueAsDate = new Date();
+</script>
+</body>
+</html>
